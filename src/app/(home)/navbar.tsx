@@ -90,6 +90,7 @@ const Navbar = () => {
           variant="ghost"
           className="size-12 border-transparent bg-white hover:bg-transparent hover:border-transparent"
           onClick={() => setIsSidebarOpen(true)}
+          aria-label="Open Sidebar"
         >
           <MenuIcon />
         </Button>
