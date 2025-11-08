@@ -42,7 +42,7 @@ const NavbarItems = [
   { href: "/contact", children: "Contact" },
 ];
 
-const Navbar = () => {
+export const Navbar = () => {
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -97,5 +97,3 @@ const Navbar = () => {
     </nav>
   );
 };
-
-export default Navbar;
