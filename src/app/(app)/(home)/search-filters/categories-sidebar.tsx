@@ -10,22 +10,26 @@ import {
 	SheetTitle
 } from '@/components/ui/sheet'
 
-import { customCategory } from "../types"
+import { useTRPC } from '@/trpc/client'
+import { useQuery } from '@tanstack/react-query'
+import { CategoriesGetManyOutput, CategoriesGetManyOutputSingle } from '@/modules/categories/types'
 
 interface Props {
 	open: boolean,
 	onOpenChange: (open: boolean) => void
-	categories: customCategory[]
 }
 
-export const CategoriesSidebar = ({ open, onOpenChange, categories }: Props) => {
+export const CategoriesSidebar = ({ open, onOpenChange}: Props) => {
+	const trpc = useTRPC()
+	const { data } = useQuery(trpc.categories.getMany.queryOptions())
+
 	const router = useRouter()
 
-	const [parentCategories, setParentCategories] = useState<customCategory[] | null>(null)
-	const [selectedCategory, setSelectedCategory] = useState<customCategory | null>(null)
+	const [parentCategories, setParentCategories] = useState<CategoriesGetManyOutput | null>(null)
+	const [selectedCategory, setSelectedCategory] = useState<CategoriesGetManyOutputSingle | null>(null)
 	
 	// if we have parent categories show those, otherwise use root categories
-	const currentCategories = parentCategories ?? categories ?? []
+	const currentCategories = parentCategories ?? data ?? []
 
 	const handleOpenChange = (open: boolean) => {
 		setSelectedCategory(null)
@@ -33,9 +37,9 @@ export const CategoriesSidebar = ({ open, onOpenChange, categories }: Props) => 
 		onOpenChange(open)
 	}
 
-	const handleCategoryClick = (category: customCategory) => {
+	const handleCategoryClick = (category: CategoriesGetManyOutputSingle) => {
 		if (category.subcategories && category.subcategories.length > 0) {
-			setParentCategories(category.subcategories as customCategory[])
+			setParentCategories(category.subcategories as CategoriesGetManyOutput)
 			setSelectedCategory(category)
 		} else {
 			// This is a leaf category (no subcategories)
