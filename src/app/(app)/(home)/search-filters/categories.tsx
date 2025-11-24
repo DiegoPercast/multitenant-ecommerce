@@ -6,26 +6,26 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 import { CategoryDropdown } from "./category-dropdown";
-import { customCategory } from "../types";
 import { ListFilterIcon } from "lucide-react";
 import { CategoriesSidebar } from "./categories-sidebar";
+import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 interface Props {
-  categories: customCategory[];
+  data: CategoriesGetManyOutput;
 }
 
-export const Categories = ({ categories }: Props) => {
+export const Categories = ({ data }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const viewAllRef = useRef<HTMLDivElement>(null);
 
-  const [visibleCount, setVisibleCount] = useState(categories.length);
+  const [visibleCount, setVisibleCount] = useState(data.length);
   const [isAnyHovered, setIsAnyHovered] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const activeCategory = "all";
 
-  const activeCategoryIndex = categories.findIndex((cat) => cat.slug === activeCategory)
+  const activeCategoryIndex = data.findIndex((cat) => cat.slug === activeCategory)
   const isActiveCategoryHidden = activeCategoryIndex >= visibleCount && activeCategoryIndex !== -1
 
   useEffect(() => {
@@ -55,12 +55,12 @@ export const Categories = ({ categories }: Props) => {
     resizeObserver.observe(containerRef.current!)
 
     return () => resizeObserver.disconnect()
-  }, [categories.length]);
+  }, [data.length]);
 
   return (
     <div className="relative w-full">
       {/* Categories Sidebar */}
-      <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} categories={categories} />
+      <CategoriesSidebar open={isSidebarOpen} onOpenChange={setIsSidebarOpen} />
 
       {/*  Hidden div to measure all items */}
       <div
@@ -68,7 +68,7 @@ export const Categories = ({ categories }: Props) => {
         className="absolute opacity-0 pointer-events-none flex"
         style={{ position: "fixed", top: -9999, left: -9999 }}
       >
-        {categories.map((category) => (
+        {data.map((category) => (
           <div key={category.id}>
             <CategoryDropdown
               category={category}
@@ -85,7 +85,7 @@ export const Categories = ({ categories }: Props) => {
         onMouseEnter={() => setIsAnyHovered(true)}
         onMouseLeave={() => setIsAnyHovered(false)}
       >
-        {categories.slice(0, visibleCount).map((category) => (
+        {data.slice(0, visibleCount).map((category) => (
           <div key={category.id}>
             <CategoryDropdown
               category={category}
