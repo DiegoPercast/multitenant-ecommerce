@@ -1,5 +1,5 @@
 import "server-only"; // <-- ensure this file cannot be imported from the client
-import { createTRPCOptionsProxy, TRPCQueryOptions } from "@trpc/tanstack-react-query";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { cache } from "react";
 import { createTRPCContext } from "./init";
@@ -22,4 +22,4 @@ export function Hydrate(props: { children: React.ReactNode }) {
     </HydrationBoundary>
   );
 }
-export const caller = appRouter.createCaller(createTRPCContext)
+export const caller = appRouter.createCaller(await createTRPCContext())
