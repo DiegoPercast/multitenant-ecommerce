@@ -1,9 +1,9 @@
 import { baseProcedure, createTRPCRouter } from "@/trpc/init"
 import { TRPCError } from "@trpc/server";
-import { headers as getHeaders, cookies as getCookies } from 'next/headers'
+import { headers as getHeaders } from 'next/headers'
 
-import { AUTH_COOKIE } from "../constants";
 import { loginSchema, registerSchema } from "../schemas";
+import { generateAuthCookie } from "../utils";
 
 export const authRouter = createTRPCRouter({
   session: baseProcedure.query(async ({ ctx }) => {
@@ -13,10 +13,6 @@ export const authRouter = createTRPCRouter({
 
     return session;
   }),
-	logout: baseProcedure.mutation(async () => {
-		const cookies = await getCookies()
-		cookies.delete(AUTH_COOKIE)
-	}),
   register: baseProcedure
 
     .input(registerSchema)
@@ -64,15 +60,9 @@ export const authRouter = createTRPCRouter({
         });
       }
 
-      const cookies = await getCookies();
-      cookies.set({
-        name: AUTH_COOKIE,
+      await generateAuthCookie({
+        prefix: ctx.payload.config.cookiePrefix,
         value: data.token,
-        httpOnly: true,
-        path: "/",
-        // TODO: Ensure cross-domain cookie sharing
-        // sameSite: "none",
-        // domain: ""
       });
     }),		
   login: baseProcedure
@@ -92,16 +82,10 @@ export const authRouter = createTRPCRouter({
 				})
 			}
 
-			const cookies = await getCookies()
-			cookies.set({
-				name: AUTH_COOKIE,
-				value: data.token,
-				httpOnly: true,
-				path: "/",
-				// TODO: Ensure cross-domain cookie sharing
-				// sameSite: "none",
-				// domain: ""
-			})
+			await generateAuthCookie({
+        prefix: ctx.payload.config.cookiePrefix,
+        value: data.token
+      })
 			
 			return data
     }),
