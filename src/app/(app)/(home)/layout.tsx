@@ -2,9 +2,9 @@ import { Suspense } from "react";
 
 import { getQueryClient, trpc, Hydrate } from "@/trpc/server";
 
-import { Navbar } from "./navbar";
-import { Footer } from "./footer";
-import { SearchFilterSkeleton, SearchFilters } from "./search-filters";
+import { Navbar } from "@/modules/home/ui/components/navbar";
+import { Footer } from "@/modules/home/ui/components/footer";
+import { SearchFilterSkeleton, SearchFilters } from "@/modules/home/ui/components/search-filters";
 
 interface Props {
   children: React.ReactNode;
