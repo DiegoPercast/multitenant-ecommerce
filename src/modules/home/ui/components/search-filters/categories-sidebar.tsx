@@ -45,7 +45,7 @@ export const CategoriesSidebar = ({ open, onOpenChange}: Props) => {
 			// This is a leaf category (no subcategories)
 			if (parentCategories && selectedCategory) {
 				// This is a subcategory - navigate to /category/subcategory
-				router.push(`${selectedCategory.slug}/${category.slug}`)
+				router.push(`/${selectedCategory.slug}/${category.slug}`)
 			} else {
 				// This is a main category - navigate to /category
 				if (category.slug === "all") {
